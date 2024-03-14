@@ -8,21 +8,21 @@ namespace CMS.API.Controllers
     [ApiController]
     public class RoleController : Controller
     {
-        IRole _roleSerice;
+        IRole _roleService;
         public RoleController(IRole role)
         {
-            _roleSerice = role;
+            _roleService = role;
         }
         [HttpPost]
         public async Task<IActionResult> CreateRole([FromBody]Role role)
         {
-            var savedRole = await _roleSerice.CreateRole(role);
+            var savedRole = await _roleService.CreateRole(role);
             return Ok(savedRole);
         }
         [HttpGet]
         public async Task<IActionResult> GetAllRole()
         {
-            var roleList = await _roleSerice.GetAllRoles();
+            var roleList = await _roleService.GetAllRoles();
             return Ok(roleList);
         }
     }

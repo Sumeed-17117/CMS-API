@@ -15,6 +15,7 @@ var provider = builder.Services.BuildServiceProvider();
 var config = provider.GetService<IConfiguration>();
 builder.Services.AddDbContext<ubitse_SampleDBContext>(item => item.UseSqlServer(config.GetConnectionString("CMS")));
 builder.Services.AddScoped<IRole, RoleSerivces>();
+builder.Services.AddScoped<IUser,UserService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

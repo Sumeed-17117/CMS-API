@@ -45,11 +45,6 @@ namespace CMS.Models
                 entity.Property(e => e.CourierName).IsUnicode(false);
 
                 entity.Property(e => e.RouteId).HasColumnName("RouteID");
-
-                entity.HasOne(d => d.Route)
-                    .WithMany(p => p.Couriers)
-                    .HasForeignKey(d => d.RouteId)
-                    .HasConstraintName("FK__Courier__RouteID__164452B1");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -83,11 +78,6 @@ namespace CMS.Models
                 entity.Property(e => e.ShipmentPrice).IsUnicode(false);
 
                 entity.Property(e => e.VendorId).HasColumnName("VendorID");
-
-                entity.HasOne(d => d.Vendor)
-                    .WithMany(p => p.Shipments)
-                    .HasForeignKey(d => d.VendorId)
-                    .HasConstraintName("FK__Shipments__Vende__1FCDBCEB");
             });
 
             modelBuilder.Entity<ShipmentsBooked>(entity =>
@@ -104,21 +94,6 @@ namespace CMS.Models
                 entity.Property(e => e.ShipmentId).HasColumnName("ShipmentID");
 
                 entity.Property(e => e.StatusId).HasColumnName("StatusID");
-
-                entity.HasOne(d => d.Courier)
-                    .WithMany(p => p.ShipmentsBookeds)
-                    .HasForeignKey(d => d.CourierId)
-                    .HasConstraintName("FK__Shipments__Couri__239E4DCF");
-
-                entity.HasOne(d => d.Shipment)
-                    .WithMany(p => p.ShipmentsBookeds)
-                    .HasForeignKey(d => d.ShipmentId)
-                    .HasConstraintName("FK__Shipments__Shipm__22AA2996");
-
-                entity.HasOne(d => d.Status)
-                    .WithMany(p => p.ShipmentsBookeds)
-                    .HasForeignKey(d => d.StatusId)
-                    .HasConstraintName("FK__Shipments__Statu__24927208");
             });
 
             modelBuilder.Entity<Status>(entity =>
