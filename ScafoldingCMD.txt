@@ -1,0 +1,1 @@
+ Scaffold-DbContext 'Data Source=sql.bsite.net\MSSQL2016;Initial Catalog=ubitse_SampleDB;User ID=ubitse_SampleDB;Password=ubitse2025;' Microsoft.EntityFrameworkCore.SqlServer -ContextDir "../CMS.DBServices/Dbcontext" -f
