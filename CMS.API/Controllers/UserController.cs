@@ -2,6 +2,11 @@
 using CMS.Models;
 using CMS.Models.DTOS;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace CMS.API.Controllers
 {
@@ -10,9 +15,12 @@ namespace CMS.API.Controllers
     public class UserController : Controller
     {
         IUser _userService;
-        public UserController(IUser userService)
+        JwtOption _options;
+        public UserController(IUser userService,IOptions<JwtOption> options)
         {
             _userService = userService;
+            _options = options.Value;
+
         }
 
         [HttpPost]
@@ -41,7 +49,16 @@ namespace CMS.API.Controllers
                     var pass = _userService.DecryptPassword(user.Password, loginDTO.Password);
                     if (pass)
                     {
-                        return Ok(user);
+                        var jwtKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key));
+                        var cred = new SigningCredentials(jwtKey, SecurityAlgorithms.HmacSha256);
+                        List<Claim> claims = new List<Claim>();
+                        {
+                            new Claim("UserId", user.Id.ToString());
+                            new Claim("RoleId", user.RoleId.ToString());
+                        }
+                        var sToken = new JwtSecurityToken(_options.Key, _options.Issuer, claims, expires: DateTime.Now.AddHours(5), signingCredentials: cred);
+                        var token = new JwtSecurityTokenHandler().WriteToken(sToken);
+                        return Ok(new { token = token});
                     }
                     return NotFound(new { Message = "Wrong Credentials" });
                 }

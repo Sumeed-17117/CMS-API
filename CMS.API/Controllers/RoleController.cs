@@ -1,11 +1,13 @@
 ﻿using CMS.DBServices.Interfaces;
 using CMS.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CMS.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+   
     public class RoleController : Controller
     {
         IRole _roleService;
@@ -20,6 +22,7 @@ namespace CMS.API.Controllers
             return Ok(savedRole);
         }
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAllRole()
         {
             var roleList = await _roleService.GetAllRoles();
