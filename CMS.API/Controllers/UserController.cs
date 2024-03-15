@@ -29,9 +29,19 @@ namespace CMS.API.Controllers
         {
             try
             {
-                var savedUser = await _userService.CreateUser(user);
-                return Ok(savedUser);
-            }catch (Exception ex)
+                var existingUser = await _userService.SearchUserByUsername(user.UserName);
+
+                if (existingUser != null)
+                {
+                    return Conflict(new { Message = "A user with the same username already exists. You cannot register as a new user." });
+                }
+                else
+                {
+                    var savedUser = await _userService.CreateUser(user);
+                    return Ok(savedUser);
+                }
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -44,7 +54,7 @@ namespace CMS.API.Controllers
             try
             {
                 var user = await _userService.SearchUserByUsername(loginDTO.UserName);
-                if (user != null)
+                if (user != null )
                 {
                     var pass = _userService.DecryptPassword(user.Password, loginDTO.Password);
                     if (pass)
