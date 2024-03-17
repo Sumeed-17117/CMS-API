@@ -1,6 +1,7 @@
 ﻿using CMS.DBServices.Interfaces;
 using CMS.Models;
 using CMS.Models.DTOS;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -33,7 +34,7 @@ namespace CMS.API.Controllers
 
                 if (existingUser != null)
                 {
-                    return Conflict(new { Message = "A user with the same username already exists. You cannot register as a new user." });
+                    return Conflict(new { Message = "Username Already Exist" });
                 }
                 else
                 {
@@ -61,14 +62,14 @@ namespace CMS.API.Controllers
                     {
                         var jwtKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key));
                         var cred = new SigningCredentials(jwtKey, SecurityAlgorithms.HmacSha256);
-                        List<Claim> claims = new List<Claim>();
+                        var claims = new List<Claim>
                         {
-                            new Claim("UserId", user.Id.ToString());
-                            new Claim("RoleId", user.RoleId.ToString());
-                        }
+                          new Claim("UserId", user.Id.ToString()),
+                          new Claim("RoleId", user.RoleId.ToString())
+                        };
                         var sToken = new JwtSecurityToken(_options.Key, _options.Issuer, claims, expires: DateTime.Now.AddHours(5), signingCredentials: cred);
                         var token = new JwtSecurityTokenHandler().WriteToken(sToken);
-                        return Ok(new { token = token});
+                        return Ok(new {userId=user.Id,roleId=user.RoleId, token = token});
                     }
                     return NotFound(new { Message = "Wrong Credentials" });
                 }
@@ -78,6 +79,16 @@ namespace CMS.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult userDetail()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userIdClaim = identity.Claims.FirstOrDefault(o=>o.Type == "UserId")?.Value;
+            var roleId = identity.Claims.FirstOrDefault(o => o.Type == "RoleId")?.Value;
+            return Ok(new { Username = userIdClaim,RoleId = roleId });
         }
     }
 }
