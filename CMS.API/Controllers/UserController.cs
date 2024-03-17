@@ -80,15 +80,5 @@ namespace CMS.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-        [HttpGet]
-        [Authorize]
-        public IActionResult userDetail()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var userIdClaim = identity.Claims.FirstOrDefault(o=>o.Type == "UserId")?.Value;
-            var roleId = identity.Claims.FirstOrDefault(o => o.Type == "RoleId")?.Value;
-            return Ok(new { Username = userIdClaim,RoleId = roleId });
-        }
     }
 }

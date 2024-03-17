@@ -11,7 +11,6 @@ namespace CMS.DBServices.Interfaces
     public interface IUser
     {
         Task<User> CreateUser(User user);
-
         Task<User> SearchUserByUsername(string username);
         string EncryptPassword(string password);
         bool DecryptPassword(string Hashed, string password);
