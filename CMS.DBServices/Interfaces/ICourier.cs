@@ -12,5 +12,7 @@ namespace CMS.DBServices.Interfaces
         Task<Courier> CreateCourier(Courier courier);
 
         Task<List<Courier>> GetAll();
+
+
     }
 }

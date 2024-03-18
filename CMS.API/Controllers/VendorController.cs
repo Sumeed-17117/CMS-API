@@ -16,7 +16,7 @@ namespace CMS.API.Controllers
     {
 
         IVendor _vendorService;
-        public VendorController (IVendor vendor)
+        public VendorController(IVendor vendor)
         {
             _vendorService = vendor;
         }
@@ -61,6 +61,66 @@ namespace CMS.API.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("Get-Vendor/{VendorId:int}")]
+        public async Task<IActionResult> GetById(int VendorId)
+        {
+            try
+            {
+                var FoundedVendor = await _vendorService.GetVendorById(VendorId);
+                if (FoundedVendor != null)
+                {
+                    return Ok(FoundedVendor);
+                }
+                return NotFound(new { Message = "Vendor Not Found" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+
+        }
+
+        [HttpDelete]
+        [Route("DeleteVendor/{VendorId:int}")]
+        public async Task<IActionResult> DeleteVendor(int VendorId)
+        {
+            try
+            {
+                var FoundedVendor = await _vendorService.GetVendorById(VendorId);
+                if (FoundedVendor == null)
+                {
+                    return BadRequest(new { Message = "Vendor Not Found" });
+                }
+                await _vendorService.Delete(FoundedVendor);
+                return Ok(new { Message = "Vendor Deleted" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpPut]
+        [Route("UpdateVendor/{VendorId:int}")]
+        public async Task<IActionResult> UpdateVendor([FromBody] Vendor vendorUpdate, int VendorId)
+        {
+            try
+            {
+                var FoundedVendor = await _vendorService.GetVendorById(VendorId);
+                if (FoundedVendor == null)
+                {
+                    return BadRequest(new { Message = "Vendor Not Found" });
+                }
+                await _vendorService.Update(FoundedVendor, vendorUpdate);
+                return Ok(new { Message = "Vendor Updated" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
-   
 }
