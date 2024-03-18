@@ -52,6 +52,7 @@ builder.Services.AddDbContext<ubitse_SampleDBContext>(item => item.UseSqlServer(
 builder.Services.AddScoped<IRole, RoleSerivces>();
 builder.Services.AddScoped<IUser,UserService>();
 builder.Services.AddScoped<ICourier,CourierService>();
+builder.Services.AddScoped<IVendor, VendorService>();
 
 builder.Services.Configure<JwtOption>(builder.Configuration.GetSection("Jwt"));
 var key = builder.Configuration.GetSection("Jwt:Key").Get<string>();

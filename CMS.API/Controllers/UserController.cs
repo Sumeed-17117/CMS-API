@@ -48,37 +48,6 @@ namespace CMS.API.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("Login-User")]
-        public async Task<IActionResult> LoginUser([FromBody] LoginDTO loginDTO)
-        {
-            try
-            {
-                var user = await _userService.SearchUserByUsername(loginDTO.UserName);
-                if (user != null )
-                {
-                    var pass = _userService.DecryptPassword(user.Password, loginDTO.Password);
-                    if (pass)
-                    {
-                        var jwtKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key));
-                        var cred = new SigningCredentials(jwtKey, SecurityAlgorithms.HmacSha256);
-                        var claims = new List<Claim>
-                        {
-                          new Claim("UserId", user.Id.ToString()),
-                          new Claim("RoleId", user.RoleId.ToString())
-                        };
-                        var sToken = new JwtSecurityToken(_options.Key, _options.Issuer, claims, expires: DateTime.Now.AddHours(5), signingCredentials: cred);
-                        var token = new JwtSecurityTokenHandler().WriteToken(sToken);
-                        return Ok(new {userId=user.Id,roleId=user.RoleId, token = token});
-                    }
-                    return NotFound(new { Message = "Wrong Credentials" });
-                }
-                return NotFound(new { Message = "Wrong Credentials" });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        
     }
 }
