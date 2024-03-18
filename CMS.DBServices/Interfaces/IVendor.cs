@@ -1,0 +1,16 @@
+﻿using CMS.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CMS.DBServices.Interfaces
+{
+    public interface IVendor
+    {
+        Task<Vendor> CreateVendor(Vendor vendor);
+        Task<List<Vendor>> GetAllVendor();
+        Task<Vendor> SearchVendorByVendorName(string vendorName);
+    }
+}
