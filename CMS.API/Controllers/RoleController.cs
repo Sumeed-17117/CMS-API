@@ -22,7 +22,8 @@ namespace CMS.API.Controllers
             return Ok(savedRole);
         }
         [HttpGet]
-        [Authorize]
+        //[Authorize]
+        [Route("GetAllRole")]
         public async Task<IActionResult> GetAllRole()
         {
             var roleList = await _roleService.GetAllRoles();

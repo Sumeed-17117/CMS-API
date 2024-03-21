@@ -1,5 +1,6 @@
 ﻿using CMS.DBServices.Interfaces;
 using CMS.Models;
+using CMS.Models.DTOS;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,10 @@ namespace CMS.DBServices.Services
 {
     public class CourierService : BaseService<Courier>, ICourier
     {
-        public CourierService(ubitse_SampleDBContext context):base(context) { }
+        public CourierService(ubitse_SampleDBContext context):base(context) 
+        {
+          
+        }
        
         public async Task<Courier> CreateCourier(Courier courier)
         {

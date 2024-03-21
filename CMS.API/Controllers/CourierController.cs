@@ -1,6 +1,7 @@
 ﻿using CMS.DBServices.Interfaces;
 using CMS.DBServices.Services;
 using CMS.Models;
+using CMS.Models.DTOS;
 using Microsoft.AspNetCore.Mvc;
 using System.Numerics;
 
@@ -17,6 +18,7 @@ namespace CMS.API.Controllers
         }
 
         [HttpPost]
+        [Route("PostCourier")]
         public async Task<IActionResult> CreateCourier([FromBody] Courier courier)
         {
             try
@@ -113,5 +115,6 @@ namespace CMS.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
     }
 }
