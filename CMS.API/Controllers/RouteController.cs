@@ -94,6 +94,20 @@ namespace CMS.API.Controllers
             }
 
         }
+        [HttpPost]
+        [Route("PostRoute")]
+
+        public async Task<IActionResult> CreateRoute([FromBody] Models.Route route)
+        {
+            try
+            {
+                var saveRoute = await _routeService.createPost(route);
+                return Ok(saveRoute);
+            }
+            catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 
 }

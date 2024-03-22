@@ -53,5 +53,12 @@ namespace CMS.DBServices.Services
             return false;
 
         }
+
+        public async Task<Route> createPost(Route route)
+        {
+            _context.Routes.Add(route);
+            await _context.SaveChangesAsync();
+            return route;
+        }
     }
 }

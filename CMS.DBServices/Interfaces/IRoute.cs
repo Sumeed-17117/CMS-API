@@ -13,6 +13,7 @@ namespace CMS.DBServices.Interfaces
         Task<Route> GetRouteById(int id);
         Task<Boolean> DeleteRoute(int id);
         Task<Boolean> UpdateRoute(int id, Route route);
+        Task<Route> createPost(Route route);
 
     }
 }
