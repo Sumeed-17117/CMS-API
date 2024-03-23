@@ -8,5 +8,6 @@ namespace CMS.Models
         public int CourierId { get; set; }
         public string CourierName { get; set; } = null!;
         public int RouteId { get; set; }
+        public int UserId { get; set; }
     }
 }

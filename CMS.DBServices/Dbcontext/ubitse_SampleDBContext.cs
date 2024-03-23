@@ -45,6 +45,8 @@ namespace CMS.Models
                 entity.Property(e => e.CourierName).IsUnicode(false);
 
                 entity.Property(e => e.RouteId).HasColumnName("RouteID");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
             });
 
             modelBuilder.Entity<Role>(entity =>

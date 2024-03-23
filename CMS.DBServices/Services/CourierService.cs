@@ -29,10 +29,22 @@ namespace CMS.DBServices.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Courier>> GetAll()
+        public async Task<List<CourierResponseDTO>> GetAll()
         {
-           var ListCouriers = await _context.Couriers.ToListAsync();
-           return ListCouriers;
+            var ListCouriers = _context.Couriers
+                            .GroupJoin(_context.Routes, 
+                                       courier => courier.RouteId, 
+                                       route => route.RouteId,     
+                                       (courier, routes) => new { courier, routes })
+                            .SelectMany(x => x.routes.DefaultIfEmpty(), 
+                                        (courier, route) => new CourierResponseDTO
+                                        {
+                                            CourierId = courier.courier.CourierId,
+                                            CourierName = courier.courier.CourierName,
+                                            RouteId = route.RouteId,
+                                            RouteName = route.RouteName
+                                        }); ;
+            return await ListCouriers.ToListAsync();
         }
         public async Task<Courier> GetCourierById(int id)
         {

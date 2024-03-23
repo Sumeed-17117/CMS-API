@@ -12,7 +12,7 @@ namespace CMS.DBServices.Interfaces
     {
         Task<Courier> CreateCourier(Courier courier);
 
-        Task<List<Courier>> GetAll();
+        Task<List<CourierResponseDTO>> GetAll();
         Task<Courier> SearchCourierByCourierName (string courierName);
         Task<Courier> GetCourierById(int courierId);
         Task Delete(Courier courier);
