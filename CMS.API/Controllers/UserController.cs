@@ -31,10 +31,15 @@ namespace CMS.API.Controllers
             try
             {
                 var existingUser = await _userService.SearchUserByUsername(user.UserName);
+                var existingEmail = await _userService.SearchEmailByUserEmail(user.Email);
 
                 if (existingUser != null)
                 {
                     return Conflict(new { Message = "Username Already Exist" });
+                }
+                else if (existingEmail != null)
+                {
+                    return Conflict(new { Message = "Email Already Exist" });
                 }
                 else
                 {

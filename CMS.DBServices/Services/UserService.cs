@@ -65,5 +65,11 @@ namespace CMS.DBServices.Services
             var user = await _context.Users.FirstOrDefaultAsync(e => e.UserName == username);
             return user;
         }
+
+        public async Task<User> SearchEmailByUserEmail(string email)
+        {
+            var userEmail = await _context.Users.FirstOrDefaultAsync(e => e.Email == email);
+            return userEmail;
+        }
     }
 }
