@@ -12,6 +12,7 @@ namespace CMS.DBServices.Interfaces
     {
         Task<User> CreateUser(User user);
         Task<User> SearchUserByUsername(string username);
+        Task<User> SearchEmailByUserEmail(string email);
         string EncryptPassword(string password);
         bool DecryptPassword(string Hashed, string password);
 
