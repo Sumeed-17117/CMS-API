@@ -65,5 +65,6 @@ namespace CMS.DBServices.Services
             var user = await _context.Users.FirstOrDefaultAsync(e => e.UserName == username);
             return user;
         }
+
     }
 }
