@@ -12,9 +12,11 @@ namespace CMS.API.Controllers
     public class CourierController : Controller
     {
         ICourier _courierService;
-        public CourierController(ICourier courier)
+        IUser _userService;
+        public CourierController(ICourier courier,IUser user)
         {
             _courierService = courier;
+            _userService = user;
         }
 
         [HttpPost]
@@ -62,7 +64,7 @@ namespace CMS.API.Controllers
         {
             try
             {
-                var FoundedCourier = await _courierService.GetCourierById(CourierId);
+                var FoundedCourier = await _courierService.GetCourierUserById(CourierId);
                 if (FoundedCourier != null)
                 {
                     return Ok(FoundedCourier);
@@ -81,11 +83,13 @@ namespace CMS.API.Controllers
         {
             try
             {
-                var FoundedCourier = await _courierService.GetCourierById(CourierId);
+                var FoundedCourier = await _courierService.GetById(CourierId);
                 if (FoundedCourier == null)
                 {
                     return BadRequest(new { Message = "Courier Not Found" });
                 }
+                var user = await _userService.GetUserById(FoundedCourier.UserId);
+                await _userService.DeleteUser(user);
                 await _courierService.Delete(FoundedCourier);
                 return Ok(new { Message = "Courier Deleted" });
             }
@@ -98,16 +102,27 @@ namespace CMS.API.Controllers
 
         [HttpPut]
         [Route("UpdateCourier/{CourierId:int}")]
-        public async Task<IActionResult> UpdateCourier([FromBody] Courier courierUpdate, int CourierId)
+        public async Task<IActionResult> UpdateCourier([FromBody] CourierResponseDTO courierUpdate, int CourierId)
         {
             try
             {
-                var FoundedCourier = await _courierService.GetCourierById(CourierId);
+                var FoundedCourier = await _courierService.GetById(CourierId);
                 if (FoundedCourier == null)
                 {
                     return BadRequest(new { Message = "Courier Not Found" });
                 }
+
+                var user = await _userService.GetUserById(FoundedCourier.UserId);
+                User updatedModel = new User
+                {
+                   UserName = courierUpdate.CourierName,
+                   FullName = courierUpdate.FullName,
+                   Email = courierUpdate.Email,
+          
+                };
+                await _userService.UpdateUser(user, updatedModel);
                 await _courierService.Update(FoundedCourier, courierUpdate);
+
                 return Ok(new { Message = "Courier Updated" });
             }
             catch (Exception ex)

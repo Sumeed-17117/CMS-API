@@ -77,5 +77,18 @@ namespace CMS.DBServices.Services
             return user;
         }
 
+        public async Task DeleteUser(User user)
+        {
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateUser(User user,User updatedUser)
+        {
+            user.UserName = updatedUser.UserName;
+            user.Email = updatedUser.Email;
+            user.FullName = updatedUser.FullName;
+            await _context.SaveChangesAsync();
+        }
     }
 }

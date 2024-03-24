@@ -10,8 +10,13 @@ namespace CMS.Models.DTOS
     {
         public int CourierId { get; set; }
         public string CourierName { get; set; } = null!;
+        public string FullName { get; set; } = null!;
+        public string? Email { get; set; }
         public int? RouteId { get; set; }
-
+        public int UserId { get; set; }
         public string? RouteName { get; set; }
+        public DateTime? CreatedAt { get; set; }
+
+
     }
 }

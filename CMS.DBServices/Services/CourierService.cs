@@ -32,24 +32,62 @@ namespace CMS.DBServices.Services
         public async Task<List<CourierResponseDTO>> GetAll()
         {
             var ListCouriers = _context.Couriers
-                            .GroupJoin(_context.Routes, 
-                                       courier => courier.RouteId, 
-                                       route => route.RouteId,     
-                                       (courier, routes) => new { courier, routes })
-                            .SelectMany(x => x.routes.DefaultIfEmpty(), 
-                                        (courier, route) => new CourierResponseDTO
-                                        {
-                                            CourierId = courier.courier.CourierId,
-                                            CourierName = courier.courier.CourierName,
-                                            RouteId = route.RouteId,
-                                            RouteName = route.RouteName
-                                        }); ;
+      .GroupJoin(_context.Routes,
+                 courier => courier.RouteId,
+                 route => route.RouteId,
+                 (courier, routes) => new { courier, routes })
+      .SelectMany(x => x.routes.DefaultIfEmpty(),
+                  (courier, route) => new { courier.courier, route })
+      .Join(_context.Users,
+            courierRoute => courierRoute.courier.UserId,
+            user => user.Id,
+            (courierRoute, user) => new CourierResponseDTO
+            {
+                CourierId = courierRoute.courier.CourierId,
+                CourierName = courierRoute.courier.CourierName,
+                RouteId = courierRoute.route.RouteId,
+                RouteName = courierRoute.route.RouteName,
+                FullName = user.FullName,
+                UserId = user.Id,
+                CreatedAt = user.CreatedAt
+            });
+
             return await ListCouriers.ToListAsync();
+
         }
-        public async Task<Courier> GetCourierById(int id)
+
+        public async Task<Courier> GetById(int courierId)
         {
-            var FoundCourier = await _context.Couriers.FirstOrDefaultAsync(x =>x.CourierId == id);
-            return FoundCourier;
+            var courier = await _context.Couriers.FirstOrDefaultAsync((e) => e.CourierId == courierId);
+            return courier;
+        }
+
+        public async Task<CourierResponseDTO> GetCourierUserById(int id)
+        {
+            var courierDetails = await _context.Couriers
+          .Where(c => c.CourierId == id)
+          .GroupJoin(_context.Routes,
+                     courier => courier.RouteId,
+                     route => route.RouteId,
+                     (courier, routes) => new { courier, routes })
+          .SelectMany(x => x.routes.DefaultIfEmpty(),
+                      (courier, route) => new { courier.courier, route })
+          .Join(_context.Users,
+                courierRoute => courierRoute.courier.UserId,
+                user => user.Id,
+                (courierRoute, user) => new CourierResponseDTO
+                {
+                    CourierId = courierRoute.courier.CourierId,
+                    CourierName = courierRoute.courier.CourierName,
+                    RouteId = courierRoute.route.RouteId,
+                    RouteName = courierRoute.route.RouteName,
+                    FullName = user.FullName,
+                    UserId = user.Id,
+                    CreatedAt = user.CreatedAt
+                })
+          .FirstOrDefaultAsync();
+
+            return courierDetails;
         }
 
         public async Task<Courier> SearchCourierByCourierName(string courierName)
@@ -58,12 +96,14 @@ namespace CMS.DBServices.Services
             return courier;
         }
 
-        public async Task Update(Courier courier,Courier courierUpdate)
+        public async Task Update(Courier courier,CourierResponseDTO updateCourier)
         {
-            courier.CourierName = courierUpdate.CourierName;
-            courier.RouteId = courierUpdate.RouteId;
+            courier.CourierName = updateCourier.CourierName;
+            courier.RouteId = (int)(updateCourier?.RouteId);
             await _context.SaveChangesAsync();
         }
+
+
 
 
     }

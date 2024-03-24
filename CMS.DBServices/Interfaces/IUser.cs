@@ -16,6 +16,8 @@ namespace CMS.DBServices.Interfaces
         string EncryptPassword(string password);
         bool DecryptPassword(string Hashed, string password);
         Task<User> GetUserById(int id);
+        Task DeleteUser(User user);
+        Task UpdateUser(User user, User updatedUser);
 
 
     }

@@ -14,9 +14,11 @@ namespace CMS.DBServices.Interfaces
 
         Task<List<CourierResponseDTO>> GetAll();
         Task<Courier> SearchCourierByCourierName (string courierName);
-        Task<Courier> GetCourierById(int courierId);
+        Task<CourierResponseDTO> GetCourierUserById(int courierId);
+
+        Task<Courier> GetById(int courierId);
         Task Delete(Courier courier);
-        Task Update(Courier courier,Courier updateCourier);
+        Task Update(Courier courier,CourierResponseDTO updateCourier);
 
 
     }
