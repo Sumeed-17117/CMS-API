@@ -78,5 +78,21 @@ namespace CMS.API.Controllers
                 return BadRequest(ex.Message);
             }
     }
+        [HttpGet]
+        [Route("GetUserById")]
+
+        public async Task<IActionResult> GetUserByID(int id)
+        {
+            try
+            {
+                var user = await _userService.GetUserById(id);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

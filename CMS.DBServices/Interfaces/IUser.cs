@@ -15,7 +15,7 @@ namespace CMS.DBServices.Interfaces
         Task<User> SearchEmailByUserEmail(string email);
         string EncryptPassword(string password);
         bool DecryptPassword(string Hashed, string password);
-
+        Task<User> GetUserById(int id);
 
 
     }

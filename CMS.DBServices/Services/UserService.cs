@@ -71,6 +71,11 @@ namespace CMS.DBServices.Services
             var userEmail = await _context.Users.FirstOrDefaultAsync(e => e.Email == email);
             return userEmail;
         }
+        public async Task<User> GetUserById(int id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(e => e.Id == id);
+            return user;
+        }
 
     }
 }
