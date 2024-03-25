@@ -60,5 +60,10 @@ namespace CMS.DBServices.Services
             await _context.SaveChangesAsync();
             return route;
         }
+        public async Task<Route> SearchCourierByRouteId(int courierRouteId)
+        {
+            var RouteId = await _context.Routes.FirstOrDefaultAsync(x => x.RouteId == courierRouteId);
+            return RouteId;
+        }
     }
 }

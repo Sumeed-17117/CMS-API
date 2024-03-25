@@ -3,6 +3,7 @@ using CMS.DBServices.Services;
 using CMS.Models;
 using CMS.Models.DTOS;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.Metrics;
 using System.Numerics;
 
 namespace CMS.API.Controllers
@@ -13,10 +14,12 @@ namespace CMS.API.Controllers
     {
         ICourier _courierService;
         IUser _userService;
-        public CourierController(ICourier courier,IUser user)
+        IRoute _routeService;
+        public CourierController(ICourier courier,IUser user, IRoute routeService)
         {
             _courierService = courier;
             _userService = user;
+            _routeService = routeService;
         }
 
         [HttpPost]
@@ -26,16 +29,21 @@ namespace CMS.API.Controllers
             try
             {
                 var existingCourier = await _courierService.SearchCourierByCourierName(courier.CourierName);
+                var existingRouteId = await _routeService.SearchCourierByRouteId(courier.RouteId);
 
-                if (existingCourier != null)
+                if (existingCourier != null )
                 {
                     return Conflict(new { Message = "Courier Already Exist" });
+
                 }
-                else
+                if (existingRouteId == null)
                 {
-                    var savedCourier = await _courierService.CreateCourier(courier);
-                    return Ok(savedCourier);
+                    return Conflict(new { Message = "RouteID does not exist" });
                 }
+                var savedCourier = await _courierService.CreateCourier(courier);
+                return Ok(savedCourier);
+
+
             }
             catch (Exception ex)
             {
@@ -107,11 +115,11 @@ namespace CMS.API.Controllers
             try
             {
                 var FoundedCourier = await _courierService.GetById(CourierId);
+                
                 if (FoundedCourier == null)
                 {
                     return BadRequest(new { Message = "Courier Not Found" });
                 }
-
                 var user = await _userService.GetUserById(FoundedCourier.UserId);
                 User updatedModel = new User
                 {
