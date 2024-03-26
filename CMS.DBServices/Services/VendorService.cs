@@ -48,9 +48,10 @@ namespace CMS.DBServices.Services
         {
             vendor.VendorName = vendorUpdate.VendorName;
             vendor.VendorEmail = vendorUpdate.VendorEmail;
-            vendor.VendorPassword = vendorUpdate.VendorPassword;
             vendor.VendorAddress = vendorUpdate.VendorAddress;
             await _context.SaveChangesAsync();
         }
+
+        
     }
 }

@@ -16,9 +16,11 @@ namespace CMS.API.Controllers
     {
 
         IVendor _vendorService;
-        public VendorController(IVendor vendor)
+        IUser _userService;
+        public VendorController(IVendor vendor, IUser userService)
         {
             _vendorService = vendor;
+            _userService = userService;
         }
 
         [HttpPost]
@@ -93,6 +95,8 @@ namespace CMS.API.Controllers
                 {
                     return BadRequest(new { Message = "Vendor Not Found" });
                 }
+                var userById = await _userService.GetUserByName(FoundedVendor.VendorName);
+                await _userService.DeleteUser(userById);
                 await _vendorService.Delete(FoundedVendor);
                 return Ok(new { Message = "Vendor Deleted" });
             }

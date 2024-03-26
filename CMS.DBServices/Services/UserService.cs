@@ -90,5 +90,11 @@ namespace CMS.DBServices.Services
             user.FullName = updatedUser.FullName;
             await _context.SaveChangesAsync();
         }
+
+        public async Task<User> GetUserByName(string FullName)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.FullName == FullName);
+            return user;
+        }
     }
 }
