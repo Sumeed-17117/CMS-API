@@ -1,9 +1,11 @@
 ﻿using CMS.DBServices.Interfaces;
 using CMS.Models;
+using CMS.Models.DTOS;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -44,14 +46,33 @@ namespace CMS.DBServices.Services
             return vendor;
         }
 
-        public async Task Update(Vendor vendor, Vendor vendorUpdate)
+        public async Task Update(Vendor vendor, UpdateVendorDTO vendorUpdate, User user)
         {
             vendor.VendorName = vendorUpdate.VendorName;
             vendor.VendorEmail = vendorUpdate.VendorEmail;
             vendor.VendorAddress = vendorUpdate.VendorAddress;
+            user.FullName = vendorUpdate.VendorName;
+            user.UserName = vendorUpdate.UserName;
             await _context.SaveChangesAsync();
         }
 
-        
+        public async Task<UpdateVendorDTO> GetVendorByIdForUpdate(int id)
+        {
+            var vendorData = await (from a in _context.Vendors
+                                    join b in _context.Users
+                                    on a.VendorName equals b.FullName
+                                    where a.VendorId == id
+                                    select new UpdateVendorDTO
+                                    {
+                                        VendorName = a.VendorName,
+                                        UserName = b.UserName,
+                                        VendorEmail = a.VendorEmail,
+                                        VendorAddress = a.VendorAddress,
+                                    }).FirstOrDefaultAsync();
+            return vendorData;
+        }
+
+
+
     }
 }

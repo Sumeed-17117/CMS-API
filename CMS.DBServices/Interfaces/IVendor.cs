@@ -1,4 +1,5 @@
 ﻿using CMS.Models;
+using CMS.Models.DTOS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace CMS.DBServices.Interfaces
 
         Task Delete(Vendor vendor);
 
-        Task Update(Vendor vendor,Vendor vendorUpdate);
+        Task Update(Vendor vendor, UpdateVendorDTO vendorUpdate, User user);
+        Task<UpdateVendorDTO> GetVendorByIdForUpdate(int id);
     }
 }

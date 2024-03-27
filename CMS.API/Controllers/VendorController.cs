@@ -69,7 +69,7 @@ namespace CMS.API.Controllers
         {
             try
             {
-                var FoundedVendor = await _vendorService.GetVendorById(VendorId);
+                var FoundedVendor = await _vendorService.GetVendorByIdForUpdate(VendorId);
                 if (FoundedVendor != null)
                 {
                     return Ok(FoundedVendor);
@@ -109,7 +109,7 @@ namespace CMS.API.Controllers
 
         [HttpPut]
         [Route("UpdateVendor/{VendorId:int}")]
-        public async Task<IActionResult> UpdateVendor([FromBody] Vendor vendorUpdate, int VendorId)
+        public async Task<IActionResult> UpdateVendor([FromBody] UpdateVendorDTO vendorUpdate, int VendorId)
         {
             try
             {
@@ -118,7 +118,11 @@ namespace CMS.API.Controllers
                 {
                     return BadRequest(new { Message = "Vendor Not Found" });
                 }
-                await _vendorService.Update(FoundedVendor, vendorUpdate);
+
+                var userData = await _userService.GetUserByName(FoundedVendor.VendorName);
+                
+
+                await _vendorService.Update(FoundedVendor, vendorUpdate, userData);
                 return Ok(new { Message = "Vendor Updated" });
             }
             catch (Exception ex)
