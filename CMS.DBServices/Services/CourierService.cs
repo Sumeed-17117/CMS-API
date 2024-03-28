@@ -48,6 +48,7 @@ namespace CMS.DBServices.Services
                 RouteId = courierRoute.route.RouteId,
                 RouteName = courierRoute.route.RouteName,
                 FullName = user.FullName,
+                Email = user.Email,
                 UserId = user.Id,
                 CreatedAt = user.CreatedAt
             });
@@ -82,6 +83,7 @@ namespace CMS.DBServices.Services
                     RouteId = courierRoute.route.RouteId,
                     RouteName = courierRoute.route.RouteName,
                     FullName = user.FullName,
+                    Email = user.Email,
                     UserId = user.Id,
                     CreatedAt = user.CreatedAt
                 })
