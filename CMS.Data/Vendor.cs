@@ -9,5 +9,6 @@ namespace CMS.Models
         public string VendorName { get; set; } = null!;
         public string VendorEmail { get; set; } = null!;
         public string VendorAddress { get; set; } = null!;
+        public int UserId { get; set; }
     }
 }

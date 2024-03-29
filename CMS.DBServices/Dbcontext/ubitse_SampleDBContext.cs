@@ -44,10 +44,6 @@ namespace CMS.Models
 
                 entity.Property(e => e.CourierName).IsUnicode(false);
 
-                entity.Property(e => e.PhoneNumber)
-                    .HasMaxLength(11)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.RouteId).HasColumnName("RouteID");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
@@ -127,6 +123,10 @@ namespace CMS.Models
 
                 entity.Property(e => e.Password).IsUnicode(false);
 
+                entity.Property(e => e.PhoneNumber)
+                    .HasMaxLength(11)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.RoleId).HasColumnName("RoleID");
 
                 entity.Property(e => e.UserName).IsUnicode(false);
@@ -134,6 +134,9 @@ namespace CMS.Models
 
             modelBuilder.Entity<Vendor>(entity =>
             {
+                entity.HasIndex(e => e.UserId, "UQ__Vendors__1788CC4D656BF494")
+                    .IsUnique();
+
                 entity.HasIndex(e => e.VendorEmail, "UQ__Vendors__F0E72A773491B1DB")
                     .IsUnique();
 

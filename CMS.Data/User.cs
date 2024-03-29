@@ -12,5 +12,6 @@ namespace CMS.Models
         public string Password { get; set; } = null!;
         public int RoleId { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public string? PhoneNumber { get; set; }
     }
 }

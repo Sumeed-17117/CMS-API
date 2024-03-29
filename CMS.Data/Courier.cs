@@ -9,6 +9,5 @@ namespace CMS.Models
         public string CourierName { get; set; } = null!;
         public int RouteId { get; set; }
         public int UserId { get; set; }
-        public string? PhoneNumber { get; set; }
     }
 }

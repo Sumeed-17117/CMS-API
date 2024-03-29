@@ -123,8 +123,8 @@ namespace CMS.API.Controllers
                 var user = await _userService.GetUserById(FoundedCourier.UserId);
                 User updatedModel = new User
                 {
-                   UserName = courierUpdate.CourierName,
-                   FullName = courierUpdate.FullName,
+                   UserName = courierUpdate.Username,
+                   FullName = courierUpdate.CourierName,
                    Email = courierUpdate.Email,
           
                 };
