@@ -46,13 +46,11 @@ namespace CMS.DBServices.Services
             return vendor;
         }
 
-        public async Task Update(Vendor vendor, UpdateVendorDTO vendorUpdate, User user)
+        public async Task Update(Vendor vendor, UpdateVendorDTO vendorUpdate)
         {
             vendor.VendorName = vendorUpdate.VendorName;
             vendor.VendorEmail = vendorUpdate.VendorEmail;
             vendor.VendorAddress = vendorUpdate.VendorAddress;
-            user.FullName = vendorUpdate.VendorName;
-            user.UserName = vendorUpdate.UserName;
             await _context.SaveChangesAsync();
         }
 
@@ -60,7 +58,7 @@ namespace CMS.DBServices.Services
         {
             var vendorData = await (from a in _context.Vendors
                                     join b in _context.Users
-                                    on a.VendorName equals b.FullName
+                                    on a.UserId equals b.Id
                                     where a.VendorId == id
                                     select new UpdateVendorDTO
                                     {
@@ -68,6 +66,7 @@ namespace CMS.DBServices.Services
                                         UserName = b.UserName,
                                         VendorEmail = a.VendorEmail,
                                         VendorAddress = a.VendorAddress,
+                                        PhoneNumber = b.PhoneNumber
                                     }).FirstOrDefaultAsync();
             return vendorData;
         }

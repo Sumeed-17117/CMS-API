@@ -119,10 +119,21 @@ namespace CMS.API.Controllers
                     return BadRequest(new { Message = "Vendor Not Found" });
                 }
 
-                var userData = await _userService.GetUserByName(FoundedVendor.VendorName);
+                var userData = await _userService.GetUserById(FoundedVendor.UserId);
+
+
+                User userUpdateData = new User
+                {
+                    UserName = vendorUpdate.UserName,
+                    Email = vendorUpdate.VendorEmail,
+                    FullName = vendorUpdate.VendorName,
+                    PhoneNumber = vendorUpdate.PhoneNumber
+                };
+
+                await _userService.UpdateUser(userData, userUpdateData);
                 
 
-                await _vendorService.Update(FoundedVendor, vendorUpdate, userData);
+                await _vendorService.Update(FoundedVendor, vendorUpdate);
                 return Ok(new { Message = "Vendor Updated" });
             }
             catch (Exception ex)

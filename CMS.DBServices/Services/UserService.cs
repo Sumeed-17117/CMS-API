@@ -88,6 +88,7 @@ namespace CMS.DBServices.Services
             user.UserName = updatedUser.UserName;
             user.Email = updatedUser.Email;
             user.FullName = updatedUser.FullName;
+            user.PhoneNumber = updatedUser.PhoneNumber;
             await _context.SaveChangesAsync();
         }
 
