@@ -15,7 +15,7 @@ namespace CMS.API.Controllers
         ICourier _courierService;
         IUser _userService;
         IRoute _routeService;
-        public CourierController(ICourier courier,IUser user, IRoute routeService)
+        public CourierController(ICourier courier, IUser user, IRoute routeService)
         {
             _courierService = courier;
             _userService = user;
@@ -23,30 +23,55 @@ namespace CMS.API.Controllers
         }
 
         [HttpPost]
-        [Route("PostCourier")]
-        public async Task<IActionResult> CreateCourier([FromBody] Courier courier)
+        [Route("Create-Courier")]
+        public async Task<IActionResult> CreateCourier([FromBody] CourierDTO courier)
         {
+            User savedUser = null;
             try
             {
-                var existingCourier = await _courierService.SearchCourierByCourierName(courier.CourierName);
-                var existingRouteId = await _routeService.SearchCourierByRouteId(courier.RouteId);
-
-                if (existingCourier != null )
+                var existingUser = await _userService.GetUserByName(courier.Username, courier.PhoneNumber);
+                if (existingUser == null)
                 {
-                    return Conflict(new { Message = "Courier Already Exist" });
-
+                    var newUser = new User
+                    {
+                        FullName = courier.CourierName,
+                        UserName = courier.Username,
+                        Email = courier.Email,
+                        PhoneNumber = courier.PhoneNumber,
+                        RoleId = 2,
+                        Password = courier.Password
+                    };
+                    savedUser = await _userService.CreateUser(newUser);
+                    var newCourier = new Courier
+                    {
+                        CourierName = courier.CourierName,
+                        RouteId = (int)courier.RouteId,
+                        UserId = savedUser.Id,
+                    };
+                    await _courierService.CreateCourier(newCourier);
+                    return Ok(new { message = "Courier Created Successfully" });
                 }
-                if (existingRouteId == null)
+                else
                 {
-                    return Conflict(new { Message = "RouteID does not exist" });
+                    return Conflict(new { message = "Username/PhoneNumber Already associated with an Account" });
                 }
-                var savedCourier = await _courierService.CreateCourier(courier);
-                return Ok(savedCourier);
+
 
 
             }
             catch (Exception ex)
             {
+                if (savedUser != null)
+                {
+                    try
+                    {
+                        await _userService.DeleteUser(savedUser);
+                    }
+                    catch (Exception dex)
+                    {
+                        return BadRequest(dex.Message);
+                    }
+                }
                 return BadRequest(ex.Message);
             }
         }
@@ -110,34 +135,48 @@ namespace CMS.API.Controllers
 
         [HttpPut]
         [Route("UpdateCourier/{CourierId:int}")]
-        public async Task<IActionResult> UpdateCourier([FromBody] CourierResponseDTO courierUpdate, int CourierId)
+        public async Task<IActionResult> UpdateCourier([FromBody] CourierDTO courierUpdate, int CourierId)
         {
             try
             {
-                var FoundedCourier = await _courierService.GetById(CourierId);
-                
-                if (FoundedCourier == null)
+                var foundedCourier = await _courierService.GetById(CourierId);
+                if (foundedCourier != null)
                 {
-                    return BadRequest(new { Message = "Courier Not Found" });
-                }
-                var user = await _userService.GetUserById(FoundedCourier.UserId);
-                User updatedModel = new User
-                {
-                   UserName = courierUpdate.Username,
-                   FullName = courierUpdate.CourierName,
-                   Email = courierUpdate.Email,
-          
-                };
-                await _userService.UpdateUser(user, updatedModel);
-                await _courierService.Update(FoundedCourier, courierUpdate);
+                    var user = await _userService.GetUserById(foundedCourier.UserId);
+                    if (user != null)
+                    {
+                        var newUser = new User
+                        {
+                            FullName = courierUpdate.CourierName,
+                            UserName = courierUpdate.Username,
+                            Email = courierUpdate.Email,
+                            PhoneNumber = courierUpdate.PhoneNumber,
+                        };
 
-                return Ok(new { Message = "Courier Updated" });
+                        await _userService.UpdateUser(user, newUser);
+                        var newCourier = new Courier
+                        {
+                            CourierName = courierUpdate.CourierName,
+                            RouteId = (int)courierUpdate.RouteId,
+                        };
+                        await _courierService.Update(foundedCourier, newCourier);
+
+                        return Ok(new { Message = "Courier Updated" });
+                    }
+                    else
+                    {
+                        return BadRequest("User associated with the courier not found.");
+                    }
+                }
+                else
+                {
+                    return NotFound(new { Message = "Courier Not Found" });
+                }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("An error occurred while updating the courier: " + ex.Message);
             }
         }
-
     }
 }

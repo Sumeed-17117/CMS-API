@@ -50,6 +50,7 @@ namespace CMS.DBServices.Services
                 Username = user.UserName,
                 Email = user.Email,
                 UserId = user.Id,
+                PhoneNumber = user.PhoneNumber,
                 CreatedAt = user.CreatedAt
             });
 
@@ -85,6 +86,7 @@ namespace CMS.DBServices.Services
                     Username = user.UserName,
                     Email = user.Email,
                     UserId = user.Id,
+                    PhoneNumber = user.PhoneNumber,
                     CreatedAt = user.CreatedAt
                 })
           .FirstOrDefaultAsync();
@@ -100,7 +102,7 @@ namespace CMS.DBServices.Services
 
   
 
-        public async Task Update(Courier courier,CourierResponseDTO updateCourier)
+        public async Task Update(Courier courier,Courier updateCourier)
         {
             courier.CourierName = updateCourier.CourierName;
             courier.RouteId = (int)(updateCourier?.RouteId);

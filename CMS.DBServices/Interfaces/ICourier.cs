@@ -17,7 +17,7 @@ namespace CMS.DBServices.Interfaces
         Task<CourierResponseDTO> GetCourierUserById(int courierId);
         Task<Courier> GetById(int courierId);
         Task Delete(Courier courier);
-        Task Update(Courier courier,CourierResponseDTO updateCourier);
+        Task Update(Courier courier,Courier updateCourier);
        
     }
 }

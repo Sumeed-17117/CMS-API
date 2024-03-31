@@ -123,9 +123,7 @@ namespace CMS.Models
 
                 entity.Property(e => e.Password).IsUnicode(false);
 
-                entity.Property(e => e.PhoneNumber)
-                    .HasMaxLength(11)
-                    .IsUnicode(false);
+                entity.Property(e => e.PhoneNumber).HasMaxLength(20);
 
                 entity.Property(e => e.RoleId).HasColumnName("RoleID");
 
