@@ -92,9 +92,9 @@ namespace CMS.DBServices.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<User> GetUserByName(string FullName,string PhoneNumber)
+        public async Task<User> GetUserByName(string userName,string PhoneNumber)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.FullName == FullName || u.PhoneNumber == PhoneNumber);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == userName || u.PhoneNumber == PhoneNumber);
             return user;
         }
 

@@ -18,6 +18,6 @@ namespace CMS.DBServices.Interfaces
         Task<User> GetUserById(int id);
         Task DeleteUser(User user);
         Task UpdateUser(User user, User updatedUser);
-        Task<User> GetUserByName(string FullName, string PhoneNumber);
+        Task<User> GetUserByName(string userName, string PhoneNumber);
     }
 }
