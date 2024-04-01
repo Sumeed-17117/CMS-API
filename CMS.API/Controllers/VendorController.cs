@@ -25,28 +25,62 @@ namespace CMS.API.Controllers
 
         [HttpPost]
         [Route("CreateVendor")]
-        public async Task<IActionResult> CreateVendor([FromBody] Vendor vendor)
+        public async Task<IActionResult> CreateVendor([FromBody] VendorDTO vendor)
         {
+            User savedUser = null;
+
             try
             {
-                var existingVendor = await _vendorService.SearchVendorByVendorName(vendor.VendorName);
-
-                if (existingVendor != null)
+                var existinguser = await _userService.GetUserByName(vendor.UserName, vendor.PhoneNumber);
+                if (existinguser == null)
                 {
-                    return Conflict(new { Message = "Vendor Already Exist" });
+                    var newUser = new User
+                    {
+                        UserName = vendor.UserName,
+                        FullName = vendor.VendorName,
+                        Email = vendor.VendorEmail,
+                        Password = vendor.Password,
+                        RoleId = 1002,
+                        PhoneNumber = vendor.PhoneNumber
+                    };
+
+                    savedUser = await _userService.CreateUser(newUser);
+                    var newVendor = new Vendor
+                    {
+                        VendorName = vendor.VendorName,
+                        VendorEmail = vendor.VendorEmail,
+                        VendorAddress = vendor.VendorAddress,
+                        UserId = savedUser.Id,
+                    };
+                    await _vendorService.CreateVendor(newVendor);
+                    return Ok(new { message = "Vendor Created Successfully" });
                 }
                 else
                 {
-                    var savedVendor = await _vendorService.CreateVendor(vendor);
-                    return Ok(savedVendor);
+                    return Ok(new { message = "User Name/ Phone Number already exist" });
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                if (savedUser != null)
+                {
+                    try
+                    {
+                        await _userService.DeleteUser(savedUser);
+                        return BadRequest(ex.Message);
+                    }
+                    catch (Exception dex)
+                    {
+                        return BadRequest(dex.Message);
+                    }
+                    
+                }
+                else
+                {
+                    return BadRequest(ex.Message);
+                }
             }
         }
-
 
         [HttpGet]
         [Route("GetVendors")]
@@ -113,36 +147,37 @@ namespace CMS.API.Controllers
         {
             try
             {
-                var FoundedVendor = await _vendorService.GetVendorById(VendorId);
-                if (FoundedVendor == null)
+                var foundedVendor = await _vendorService.GetVendorById(VendorId);
+                if (foundedVendor != null)
                 {
-                    return BadRequest(new { Message = "Vendor Not Found" });
+                    var foundedUser = await _userService.GetUserById(foundedVendor.UserId);
+                    var updateUser = new User
+                    {
+                        UserName = vendorUpdate.UserName,
+                        FullName = vendorUpdate.VendorName,
+                        Email = vendorUpdate.VendorEmail,
+                        PhoneNumber = vendorUpdate.PhoneNumber,
+                    };
+                    await _userService.UpdateUser(foundedUser, updateUser);
+
+                    var updateVendor = new Vendor
+                    {
+                        VendorName = vendorUpdate.VendorName,
+                        VendorAddress = vendorUpdate.VendorAddress,
+                        VendorEmail = vendorUpdate.VendorEmail,
+                    };
+                    await _vendorService.Update(foundedVendor, updateVendor);
+                    return Ok(new { message = "Vendor updated successfully" });
                 }
-
-
-                var userData = await _userService.GetUserByName(FoundedVendor.VendorName, "212212");
-
-//                var userData = await _userService.GetUserById(FoundedVendor.UserId);
-
-
-                User userUpdateData = new User
+                else
                 {
-                    UserName = vendorUpdate.UserName,
-                    Email = vendorUpdate.VendorEmail,
-                    FullName = vendorUpdate.VendorName,
-                    PhoneNumber = vendorUpdate.PhoneNumber
-                };
-
-                await _userService.UpdateUser(userData, userUpdateData);
+                    return Ok(new { message = "Vendor Not Found" });
+                }
                 
-
-                await _vendorService.Update(FoundedVendor, vendorUpdate);
-                return Ok(new { Message = "Vendor Updated" });
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 return BadRequest(ex.Message);
-            }
+             };
         }
     }
 }

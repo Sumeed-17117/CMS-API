@@ -18,7 +18,7 @@ namespace CMS.DBServices.Interfaces
 
         Task Delete(Vendor vendor);
 
-        Task Update(Vendor vendor, UpdateVendorDTO vendorUpdate);
+        Task Update(Vendor vendor, Vendor vendorUpdate);
         Task<UpdateVendorDTO> GetVendorByIdForUpdate(int id);
     }
 }

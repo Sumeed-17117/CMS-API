@@ -46,7 +46,7 @@ namespace CMS.DBServices.Services
             return vendor;
         }
 
-        public async Task Update(Vendor vendor, UpdateVendorDTO vendorUpdate)
+        public async Task Update(Vendor vendor, Vendor vendorUpdate)
         {
             vendor.VendorName = vendorUpdate.VendorName;
             vendor.VendorEmail = vendorUpdate.VendorEmail;
