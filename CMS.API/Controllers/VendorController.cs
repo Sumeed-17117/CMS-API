@@ -129,7 +129,7 @@ namespace CMS.API.Controllers
                 {
                     return BadRequest(new { Message = "Vendor Not Found" });
                 }
-                var userById = await _userService.GetUserByName(FoundedVendor.VendorName,"212212");
+                var userById = await _userService.GetUserById(FoundedVendor.UserId);
                 await _userService.DeleteUser(userById);
                 await _vendorService.Delete(FoundedVendor);
                 return Ok(new { Message = "Vendor Deleted" });
