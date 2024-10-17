@@ -1,5 +1,5 @@
-﻿using CMS.DBServices.Interfaces;
-using CMS.Models;
+﻿using CMS.DBServices.Dbcontext;
+using CMS.DBServices.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +11,9 @@ namespace CMS.DBServices.Services
 {
     public class BaseService<TObject>
     {
-        protected ubitse_SampleDBContext _context;
+        protected CMSAppDBContext _context;
 
-        public BaseService(ubitse_SampleDBContext context)
+        public BaseService(CMSAppDBContext context)
         {
             _context = context;
         }

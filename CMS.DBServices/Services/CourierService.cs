@@ -1,4 +1,5 @@
-﻿using CMS.DBServices.Interfaces;
+﻿using CMS.DBServices.Dbcontext;
+using CMS.DBServices.Interfaces;
 using CMS.Models;
 using CMS.Models.DTOS;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,7 @@ namespace CMS.DBServices.Services
 {
     public class CourierService : BaseService<Courier>, ICourier
     {
-        public CourierService(ubitse_SampleDBContext context):base(context) 
+        public CourierService(CMSAppDBContext context):base(context) 
         {
           
         }

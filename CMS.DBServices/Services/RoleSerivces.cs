@@ -1,4 +1,5 @@
-﻿using CMS.DBServices.Interfaces;
+﻿using CMS.DBServices.Dbcontext;
+using CMS.DBServices.Interfaces;
 using CMS.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -7,11 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CMS.DBServices.Services 
+namespace CMS.DBServices.Services
 {
     public class RoleSerivces : BaseService<Role>, IRole
     {
-        public RoleSerivces(ubitse_SampleDBContext dBContext):base(dBContext)
+        public RoleSerivces(CMSAppDBContext dBContext):base(dBContext)
         {
             
         }

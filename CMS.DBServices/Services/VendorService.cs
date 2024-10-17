@@ -1,4 +1,5 @@
-﻿using CMS.DBServices.Interfaces;
+﻿using CMS.DBServices.Dbcontext;
+using CMS.DBServices.Interfaces;
 using CMS.Models;
 using CMS.Models.DTOS;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ namespace CMS.DBServices.Services
 {
     public class VendorService : BaseService<Vendor>, IVendor
     {
-        public VendorService(ubitse_SampleDBContext context) : base(context) { }
+        public VendorService(CMSAppDBContext context) : base(context) { }
         public async Task<Vendor> CreateVendor(Vendor vendor)
         {
             _context.Vendors.Add(vendor);

@@ -1,6 +1,6 @@
+using CMS.DBServices.Dbcontext;
 using CMS.DBServices.Interfaces;
 using CMS.DBServices.Services;
-using CMS.Models;
 using CMS.Models.DTOS;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -48,7 +48,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 var provider = builder.Services.BuildServiceProvider();
 var config = provider.GetService<IConfiguration>();
-builder.Services.AddDbContext<ubitse_SampleDBContext>(item => item.UseSqlServer(config.GetConnectionString("CMS")));
+builder.Services.AddDbContext<CMSAppDBContext>(item => item.UseSqlServer(config.GetConnectionString("CMS")));
 builder.Services.AddScoped<IRole, RoleSerivces>();
 builder.Services.AddScoped<IUser,UserService>();
 builder.Services.AddScoped<ICourier,CourierService>();

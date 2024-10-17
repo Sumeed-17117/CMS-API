@@ -1,4 +1,5 @@
-﻿using CMS.DBServices.Interfaces;
+﻿using CMS.DBServices.Dbcontext;
+using CMS.DBServices.Interfaces;
 using CMS.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,7 +12,7 @@ namespace CMS.DBServices.Services
 {
     public class RouteService : BaseService<Route>, IRoute
     {
-        public RouteService(ubitse_SampleDBContext context) : base(context)
+        public RouteService(CMSAppDBContext context) : base(context)
         {
         }
 

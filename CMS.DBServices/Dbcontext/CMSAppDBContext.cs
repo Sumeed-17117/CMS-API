@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using CMS.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace CMS.Models
+namespace CMS.DBServices.Dbcontext
 {
-    public partial class ubitse_SampleDBContext : DbContext
+    public partial class CMSAppDBContext : DbContext
     {
-        public ubitse_SampleDBContext()
+        public CMSAppDBContext()
         {
         }
 
-        public ubitse_SampleDBContext(DbContextOptions<ubitse_SampleDBContext> options)
+        public CMSAppDBContext(DbContextOptions<CMSAppDBContext> options)
             : base(options)
         {
         }
@@ -30,7 +31,8 @@ namespace CMS.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=sql.bsite.net\\MSSQL2016;Initial Catalog=ubitse_SampleDB;User ID=ubitse_SampleDB;Password=ubitse2025;");
+                optionsBuilder.UseSqlServer("Server=(localdb)\\LocalSDB;Database=CMSAppDB;Trusted_Connection=True;");
+                ;
             }
         }
 
